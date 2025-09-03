@@ -28,7 +28,7 @@ jobs:
       - name: Checkout source code from private repo
         uses: actions/checkout@v4
         with:
-          repository: git@github.com:bharattech/nvme-z-app.git
+          repository: bharattech/nvme-z-app
           token: ${{ secrets.PAT_TOKEN }} # ensure you have a PAT stored as PAT_TOKEN in your repository secrets
 
       - name: install dependencies (ubuntu only)
