@@ -36,6 +36,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            xvfb \ 
             libwebkit2gtk-4.1-dev \
             librsvg2-dev \
             patchelf \
@@ -86,6 +87,12 @@ jobs:
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: npm install # change this to npm or yarn depending on which one you use.
 
+      - name: Setup virtual display
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -94,6 +101,7 @@ jobs:
           SIGN_KEY: ${{ secrets.SIGN_KEY }}
           APPIMAGETOOL_SIGN_PASSPHRASE: ${{ secrets.APPIMAGETOOL_SIGN_PASSPHRASE }}
           APPIMAGETOOL_FORCE_SIGN: 1
+          DISPLAY: :99
         with:
           tagName: nvme-z___VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           files: |
